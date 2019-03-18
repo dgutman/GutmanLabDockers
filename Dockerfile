@@ -9,7 +9,7 @@ RUN apt-get update && \
     git \
     wget curl \
     make cmake \
-    python-dev \
+    python-dev && \
     apt-get autoremove && \    
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
