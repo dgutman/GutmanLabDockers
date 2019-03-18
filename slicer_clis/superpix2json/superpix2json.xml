@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<executable>
+  <category>dermcli</category>
+  <title>Superpix2Json</title>
+  <description>Converts superpixel segmentation mask to geojson format</description>
+  <version>0.1.0</version>
+  <license>Apache 2.0</license>
+  <contributor>Deepak Roy Chittajallu (Kitware)</contributor>
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+    <image>
+      <name>in_file</name>
+      <label>Input superpixel image</label>
+      <channel>input</channel>
+      <index>0</index>
+      <description>Input superpixel segmentation mask image</description>
+    </image>
+    <file>
+      <name>out_file</name>
+      <label>Output JSON file</label>
+      <channel>output</channel>
+      <index>1</index>
+      <description>Output JSON file</description>
+    </file>
+  </parameters>
+</executable>
