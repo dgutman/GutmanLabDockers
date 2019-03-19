@@ -5,7 +5,7 @@ ALL THE CODE IN THIS FILE IS WRITTEN BY THE GUTMAN LAB AT EMORY UNIVERSITY
 http://drgutman.org/
 """
 
-import cStringIO
+import io
 import json
 import re
 
@@ -17,14 +17,14 @@ import numpy
 # TODO: add numpy, geojson, opencv to requirements.txt
 def contourToSVGString(contour):
         """
-        convert an OpenCV contour to a geojson-compatible representation
+        convert an OpenCV contour to a D3-compatible representation
         """
-        t_string = []
+        t_string = ""
         for pt in contour:
             px = np.round(pt[0] )
             py =  np.round(pt[1] )  ## Appears Y is inverted/negative in the cntours
-            t_string.append((float(px), float(py)))
-        return t_string
+            t_string+= "%d,%d " % (int(px), int(py))
+        return t_string[:-1] ##REmove the trailing space
 
 
 class NumPyArangeEncoder(json.JSONEncoder):
@@ -178,6 +178,19 @@ def fillImageGeoJSON(image_data, seed_point, tolerance):
     return {
         'features': [feat]
     }
+def contourToGeoString(contour):
+    """
+    convert an OpenCV contour to a geojson-compatible representation
+    """
+    t_string = ""
+    for pt in contour:
+
+        px = np.round(pt[0] * x_scale) + bl[0]
+        py = -1 * np.round(pt[1] * y_scale) + tr[1]
+
+        t_string+= "%d,%d " % (int(px), int(py))### These are pixel coordinate so use int not float
+
+    return t_string
 
 
 def segmentImage(input_parameters):
@@ -188,7 +201,7 @@ def segmentImage(input_parameters):
     opdata = input_parameters
 
     imgstr = re.search(r'base64,(.*)', opdata['image']).group(1)
-    tempimg = cStringIO.StringIO(imgstr.decode('base64'))
+    tempimg = io.StringIO(imgstr.decode('base64'))
     tempimg.seek(0)
     cvimg = cv2.imdecode(numpy.asarray(bytearray(tempimg.read()), dtype=numpy.uint8), 1)
     # cv2.imwrite('inputimage.png', cvimg)
@@ -212,26 +225,11 @@ def segmentImage(input_parameters):
     x_scale = native_width / imgray.shape[1]
     y_scale = native_height / imgray.shape[0]
 
-    def contourToGeoString(contour):
-        """
-        convert an OpenCV contour to a geojson-compatible representation
-        """
-        t_string = []
-        for pt in contour:
-
-            px = numpy.round(pt[0] * x_scale) + bl[0]
-            py = -1 * numpy.round(pt[1] * y_scale) + tr[1]
-
-            t_string.append((float(px), float(py)))
-
-        return t_string
 
     unique_labels = numpy.unique(imgray)
 
     # we're going to make an assumption: only consider a single hole in a polygon
-
     for label in unique_labels:
-
         working_img = imgray.copy()
         working_img[working_img != label] = 0
 
@@ -249,9 +247,7 @@ def segmentImage(input_parameters):
         # the corresponding elements of hierarchy[i] will be negative.
 
         for n, cnt in enumerate(contours):
-
             hei = hierarchy[0][n]
-
             # create an array for this polygon
             if str(label) not in cntdict.keys():
                 cntdict[str(label)] = []
@@ -263,8 +259,7 @@ def segmentImage(input_parameters):
 
             elif hei[2] < 0:
                 # this contour has no children, just add it
-
-                outer_poly = (contourToGeoString(numpy.squeeze(cnt)))
+                outer_poly = (contourToGeoString(np.squeeze(cnt)))
 
     #             x_vals = numpy.round(ca[:,0] * x_scale) + bl[0]
     #             y_vals = -1*numpy.round(ca[:,1] * y_scale) + tr[1]
