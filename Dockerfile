@@ -9,7 +9,7 @@ RUN apt-get update && \
     git \
     wget curl \
     make cmake \
-    python-dev && \
+    python3-dev python3-pip && \
     apt-get autoremove && \    
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -19,8 +19,7 @@ WORKDIR $build_path
 ENV dermcli_dir=$build_path/dermcli
 COPY . $dermcli_dir
 
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py && \
-    pip install --no-cache-dir --upgrade 'git+https://github.com/cdeepakroy/ctk-cli' && \
+RUN pip3 install --no-cache-dir --upgrade 'git+https://github.com/cdeepakroy/ctk-cli' && \
     git clone --depth 1 https://github.com/girder/slicer_cli_web.git && \   
     cd $dermcli_dir && pip install -r requirements.txt
 
