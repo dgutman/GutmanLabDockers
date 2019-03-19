@@ -21,7 +21,7 @@ def TileMap_to_SVG(input_image_file, output_json_file, debug=False):
     img_ch0 = img[:,:,0]
     img_ch1 = img[:,:,1]
     img_ch2 = img[:,:,2]
-    
+
     img_minor = img_ch2  ## Need to double check this
     img_major = img_ch1   ## Also check this
 
@@ -40,29 +40,26 @@ def TileMap_to_SVG(input_image_file, output_json_file, debug=False):
         working_img = img_gray.copy()
         working_img[working_img != label] = 0
         ### this breaks when label == 0
-        
         ## can pass cv2.RETR_CCCOMP or RETR_EXTERNAL
-        _,contours, hierarchy = cv2.findContours(working_img.astype(np.uint8), 
+        contours, hierarchy = cv2.findContours(working_img.astype(np.uint8), 
                                                  cv2.RETR_EXTERNAL, 
                                                  cv2.CHAIN_APPROX_SIMPLE) ## can also do CHAIN_APPROX_TC89_L1
-        
         if len(contours) > 0:
             if debug: print("Found %d contours for label %s" % ( len(contours), label))
             for c in contours:    
-                outerpoly = ip.contourToSVGString( np.squeeze( c ) )            
-                all_cnts.append( { 'geometry': { 'type': 'polygon', 'coordinates': outerpoly }, 'properties' : { 'labelindex': str(label-1)    } } )
+#                outerpoly = ip.contourToSVGString( np.squeeze( c ) )            
 
-                # try:
-                #     outerpoly = ip.contourToSVGString( np.squeeze( c ) )            
-                # except:
-                #     print("SOMETHING WRONG IN THIS IMAGE CONTOUR... 2 few points??",c)
+                try:
+                    outerpoly = ip.contourToSVGString( np.squeeze( c ) )            
+                    all_cnts.append( { 'geometry': { 'type': 'polygon', 'coordinates': outerpoly }, 'properties' : { 'labelindex': str(label-1)    } } )
+
+                except:
+                    if debug:(print("SOMETHING WRONG IN THIS IMAGE CONTOUR... 2 few points??",c))
         else:
             if debug: print(len(contours),"were found for label",label)
     for c in all_cnts:
         return_data.append(c)
-          
     superpixel_contours = return_data
-    
     ##Overwrite existing be default.. 
     # if not os.path.isfile(output_json_file):
     with  open(output_json_file,'w') as outfile:
@@ -71,7 +68,6 @@ def TileMap_to_SVG(input_image_file, output_json_file, debug=False):
 
 def main(args):
     TileMap_to_SVG(args.in_file, args.out_file)
-    
+
 if __name__ == "__main__":
     main(CLIArgumentParser().parse_args())
-    
