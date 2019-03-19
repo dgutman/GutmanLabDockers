@@ -5,6 +5,11 @@ MAINTAINER deepak.chittajallu@kitware.com
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
+    libssl-dev \
+    libffi-dev \
+    libglib2.0-0 \
+    libxrender-dev \
+    libsm6 libxext6 \
     ca-certificates \
     git \
     wget curl \
@@ -19,7 +24,10 @@ WORKDIR $build_path
 ENV dermcli_dir=$build_path/dermcli
 COPY . $dermcli_dir
 
-RUN pip3 install --no-cache-dir --upgrade 'git+https://github.com/cdeepakroy/ctk-cli' && \
+RUN ln /usr/bin/python3 /usr/bin/python && \
+    ln /usr/bin/pip3 /usr/bin/pip && \
+    pip install --upgrade setuptools && \
+    pip install --no-cache-dir --upgrade 'git+https://github.com/cdeepakroy/ctk-cli' && \
     git clone --depth 1 https://github.com/girder/slicer_cli_web.git && \   
     cd $dermcli_dir && pip install -r requirements.txt
 

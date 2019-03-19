@@ -1,5 +1,4 @@
 geojson
-ipyparallel
 numpy
 opencv-python
 Pillow
