@@ -1,6 +1,6 @@
 ## Building Docker Container
 
-docker build -t dsaTileFtrXtract .
+docker build -t dsatileftrxtract .
 
 ### What does this do
 This will build a local docker container with the TAG dsaTileFxtXtract;
@@ -9,7 +9,7 @@ it not to copy, will NOT be accessible in the docker container
 
 ## Running the container locally for testing
 
-   docker run -it -v ${PWD}:/data dsaTileFxtTract bash
+   docker run -it -v ${PWD}:/data dsatileftrxtract bash
 
 This starts a docker container in interactive mode at a bash terminal
 
