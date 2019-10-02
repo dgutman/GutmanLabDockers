@@ -1,0 +1,4 @@
+geojson
+numpy
+opencv-python
+Pillow
