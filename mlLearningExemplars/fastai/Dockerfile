@@ -15,23 +15,15 @@ RUN apt-get update && apt-get install -y --allow-downgrades --no-install-recomme
          libjpeg-dev \
 	 zip \
 	 unzip \
-         libpng-dev &&\
-     rm -rf /var/lib/apt/lists/*
+         libpng-dev \
+	python3-dev &&\
+	rm -rf /var/lib/apt/lists/*
 
-
-ENV PYTHON_VERSION=3.6
-RUN curl -o ~/miniconda.sh -O  https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
-     chmod +x ~/miniconda.sh && \
-     ~/miniconda.sh -b -p /opt/conda && \
-     rm ~/miniconda.sh && \
-    /opt/conda/bin/conda install conda-build
 
 
 WORKDIR /notebooks
 
 RUN git clone https://github.com/fastai/fastai.git .
-RUN ls && /opt/conda/bin/conda env create
-RUN /opt/conda/bin/conda clean -ya
 
 ENV PATH /opt/conda/envs/fastai/bin:$PATH
 ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
@@ -53,6 +45,21 @@ RUN ls -la /notebooks/courses/dl1/data/
 
 RUN chmod -R a+w /notebooks
 
+RUN curl https://bootstrap.pypa.io/get-pip.py -O && \     
+        python3 get-pip.py && \
+        rm get-pip.py
+
+#    ln /usr/bin/pip3 /usr/bin/pip && \
+#RUN pip install --upgrade setuptools && \
+#   ln /usr/bin/pip3 /usr/bin/pip
+
+#
+#    pip install --no-cache-dir --upgrade 'git+https://github.com/cdeepakroy/ctk-cli' && \
+#    git clone --depth 1 https://github.com/girder/slicer_cli_web.git && \   
+#    cd $dermcli_dir && pip install -r requirements.txt
+
+
+RUN pip install torch fastai
 ENV PATH /opt/conda/bin:$PATH
 WORKDIR /notebooks
 
@@ -81,3 +88,8 @@ CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root", "--n
 #conda install cudatoolkit=10.0 -c pytorch -c fastai fastai
 
 #https://towardsdatascience.com/fastai-image-classification-32d626da20
+I has this problem than use docker image - and solution was add flag “–ipc=host” for docker run
+nvidia-docker run --rm -ti --ipc=host pytorch-cudnnv6
+Full doc for docker image - https://github.com/pytorch/pytorch#docker-image 148
+
+
