@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    <link rel="stylesheet" href="http://cdn.webix.com/edge/webix.css" type="text/css"> 
+    <script src="http://cdn.webix.com/edge/webix.js" type="text/javascript"></script>  
+
+<style>
+
+.imgOverlay
+	{
+	background-color: blue;
+	}
+
+</style>
+
+    </head>
+    <body>
+        <script type="text/javascript" charset="utf-8">
+    /* place for UI configuration */
+
+
+
+
+data_ArgoData = ['ISIC_0000000.jpg','ISIC_0000000_Segmentation.png', 'ISIC_0000001.jpg','ISIC_0000001_Segmentation.png',
+	'ISIC_0000002.jpg','ISIC_0000002_Segmentation.png', 'ISIC_0000004.jpg', 'ISIC_0000004_Segmentation.png',
+	'ISIC_0000006.jpg', 'ISIC_0000006_Segmentation.png', 'ISIC_0016114_superpixels_v3.0.png',
+	'ISIC_0016133.jpg']
+
+imgBaseView =
+	{ view: "template", template: "<img class='imgOverlay' src='datasets/ISIC_0000001_Segmentation.png' id=isicSegImg>"}
+
+imgOverlay = 
+	{ view: "template", template: "<img class='imgOverlay' src='datasets/ISIC_0000001.jpg' id=isicBaseImg>"}
+
+
+/* This is a dataview that shows me the training data and/or class labels */
+trainingDataThumbView = {}
+
+
+wbx_thumbDV  = {
+	view:"dataview",
+	id: "wbx_thumbDV",
+	template :"HI HOW ARE YOU#name#"
+	}
+
+
+webix.ui({
+  rows:[
+      { view:"template", 
+        type:"header", template:"DSA CBIR Prototypes" },
+      {
+	cols: [ {rows: [ imgBaseView,imgOverlay, wbx_thumbDV]}, {view:"template",template:"ImgSelector"}]
+	}
+  ]
+});
+        </script>
+    </body>
+</html>

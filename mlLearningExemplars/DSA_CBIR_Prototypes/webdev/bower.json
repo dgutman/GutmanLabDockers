@@ -1,0 +1,27 @@
+{
+  "name": "DSA_CBIR_Prototypes",
+  "description": "Content Based Image Retrieval and Deep Learning Vis",
+  "main": "index.html",
+  "keywords": [
+    "dsa",
+    "cdsa",
+    "cbir",
+    "deeplearning"
+  ],
+  "authors": [
+    "David A Gutman"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webix": "^5.0.0",
+    "openseadragon": "^2.3.1"
+  }
+}
