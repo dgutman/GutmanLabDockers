@@ -99,7 +99,7 @@ def grabTilesFromImage( imageData, outputDir, lowResMag=1.25, outputRes=20, tile
 # To generate Training and Test Tiles for CNN, calls the grabTilesFromImage function
 train  = 0.8
 totalSlides = len(dxSlides)
-
+#https://www.kaggle.com/qitvision/a-complete-ml-pipeline-fast-ai/notebook
 ## Output Testing & Training Images for Cohort
 for idx,sl in enumerate(dxSlides):
 ## I am assuming 80% i.e. 16/20 = 0.8...
