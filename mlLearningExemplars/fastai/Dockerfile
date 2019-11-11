@@ -47,6 +47,7 @@ RUN conda install -y -c pytorch \
     cudatoolkit=10.0 \
     "pytorch=1.2.0=py3.6_cuda10.0.130_cudnn7.6.2_0" \
     "torchvision=0.4.0=py36_cu100" \
+    scikit-learn \
  && conda clean -ya
 
 # Install HDF5 Python bindings
@@ -69,14 +70,17 @@ RUN conda install -y graphviz=2.40.1 python-graphviz=0.8.4 jupyter\
 RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     libgtk2.0-0 \
     libcanberra-gtk-module \
+    texlive-xetex texlive-fonts-recommended texlive-generic-recommended nano \
  && sudo rm -rf /var/lib/apt/lists/*
 RUN conda install -y -c menpo opencv3=3.1.0 \
  && conda clean -ya
 
 # Install FastAI
-RUN conda install -y -c fastai fastai\
- && conda clean -ya
+RUN conda install -y -c fastai fastai
 
+RUN conda install -c fastai -c stason ipyexperiments
+
+RUN conda clean -ya
 
 
 ## Add in FastAI Tutorial samples
@@ -93,18 +97,24 @@ USER user
 
 RUN git clone https://github.com/fastai/fastai.git /data/notebooks
 
-RUN curl http://files.fast.ai/data/dogscats.zip --output dogscats.zip
-RUN unzip -d . dogscats.zip
-RUN rm dogscats.zip
+#RUN curl http://files.fast.ai/data/dogscats.zip --output dogscats.zip
+#RUN unzip -d . dogscats.zip
+#RUN rm dogscats.zip
 
 
 #RUN ln -s /data/ /notebooks/courses/dl1/
 #RUN ls -la /notebooks/courses/dl1/data/
 
+RUN jupyter notebook --generate-config --allow-root
+RUN echo "c.NotebookApp.password =  u'sha1:8b1f051f33c3:2aa6861f67d30286b780bf7270bc25ce157519c8'" >> /home/user/.jupyter/jupyter_notebook_config.py	
 
+
+RUN echo "c.NotebookApp.notebook_dir = '/'" >> /home/user/.jupyter/jupyter_notebook_config.py
+
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root", "--no-browser"]
 
 # Set the default command to python3
-CMD ["python3"]
+#CMD ["python3"]
 
 
 
